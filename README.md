@@ -13,7 +13,7 @@
 | F4:set ns      | F9:full-screen   |      |
 | F5:jack-in     |                  |       |
 
-
+| Left-Side         | Middle               | Right-Side |
 | :---              |     :---:            |          ---: |
 | highlight-text:~~ | start-mark:C-<SPC>   | zoom-out:--|
 | para-mode:QQ      | end-region:MOUSE-3   | zoom-in:== |
