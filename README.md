@@ -1,16 +1,26 @@
 # Emacs init.el file for Clojure
 
 ## Keyboard layout
- F1:eval sexp             F6:del-win                 F11:full-screen
-   F2:eval buffer           F7:ver-split                F12:search-text
-     F3:eval all               F8:hor-split 
-       F4:set ns                 F9:comment-code  
-         F5:jack-in                F10:format-code 
 
- highlight-text:~~          C-<SPC>:start mark          --:zoom-out ==:zoom-in
-      para-mode:QQ          MOUSE-3:end region           \\:kill-searches                
-     select-all:AA                                       '':kill-non-core.cljs
- sidebar-toggle:ZZ      C-x C-f:create file     KK:kill-line    
+
+
+
+| Cider-Commands | Windows-Handling | Code-Text |
+| :---           |     :---:        |          ---: |
+| F1:eval sexp   | F6:del-win       | F10:comment-code|
+| F2:eval buffer | F7:ver-split     | F11:format-code |
+| F3:eval all    | F8:hor-split     | F12:search-text |
+| F4:set ns      | F9:full-screen   |      |
+| F5:jack-in     |                  |       |
+
+
+| :---              |     :---:            |          ---: |
+| highlight-text:~~ | start-mark:C-<SPC>   | zoom-out:--|
+| para-mode:QQ      | end-region:MOUSE-3   | zoom-in:== |
+| select-all:AA     | kill-line:KK         | kill-searchs:\\\\|
+| sidebar-toggle:ZZ | create-file:C-x C-f  | kill-non-core:''     |
+
+
 
 ## Compile Clojure sequence	With main file selected
 	F5 cider-jack-in

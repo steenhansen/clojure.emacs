@@ -297,10 +297,11 @@
 (global-set-key [f6]  'delete-window)
 (global-set-key [f7]  'split-window-below)
 (global-set-key [f8]  'split-window-right)
-(global-set-key [f9]  'e-flip-comment-line-or-region)
-(global-set-key [f10] 'cider-format-buffer)
-(global-set-key [f11] 'e-full-screen)
-(global-set-key [f12]  'ag)                    
+(global-set-key [f9]  'e-full-screen)
+
+(global-set-key [f10] 'e-flip-comment-line-or-region)
+(global-set-key [f11] 'cider-format-buffer)
+(global-set-key [f12] 'ag)                    
 
                                         
   (key-chord-mode 1)
