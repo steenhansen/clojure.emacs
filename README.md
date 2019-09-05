@@ -17,7 +17,7 @@
 | :---              |     :---:            |          ---: |
 | highlight-text:~~ | start-mark:C-<SPC>   | zoom-out:--|
 | para-mode:QQ      | end-region:MOUSE-3   | zoom-in:== |
-| select-all:AA     | kill-line:KK         | kill-searchs:\\\\|
+| select-all:AA     | kill-line:KK         | kill-searches: \\\\ |
 | sidebar-toggle:ZZ | create-file:C-x C-f  | kill-non-core:''     |
 
 
