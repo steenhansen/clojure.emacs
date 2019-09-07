@@ -1,4 +1,8 @@
-    
+
+;; .emacs or init.el
+;; C-h v 'user-init-file' will show where init.el/.emacs file is
+;; https://github.com/flyingmachine/emacs-for-clojure/		
+
 ;;;;
 ;; Packages
 ;;;;
@@ -63,6 +67,9 @@
     ;; a filterable list of possible commands in the minibuffer
     ;; http://www.emacswiki.org/emacs/Smex
     smex
+
+    ;; project navigation
+    projectile
 
     ;; colorful parenthesis matching
     rainbow-delimiters
@@ -135,24 +142,34 @@
 ;; Langauage-specific
 (load "setup-clojure.el")
 (load "setup-js.el")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(coffee-tab-width 2)
+ '(package-selected-packages
+   (quote
+    (flycheck-clojure dashboard centaur-tabs hiwin key-chord ibuffer-sidebar dired-sidebar smart-mode-line-atom-one-dark-theme ag use-package magit tagedit rainbow-delimiters projectile smex ido-completing-read+ cider clojure-mode-extra-font-locking clojure-mode paredit exec-path-from-shell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+ 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ 
+(eval-after-load 'flycheck '(flycheck-clojure-setup))             
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
-
-
-
-
-
-
-
-
-
-
+(eval-after-load 'flycheck
+  '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
 
 (require 'zoom-frm)    
 (require 'key-chord)  
-(require 'kmb)                     ; elpa version doesn't work in windows :-(
+(require 'kmb)                    
 (require 'highlight-symbol)
-(require 'delsel)                  ; delete is normal now
-
 (require 'dashboard)
 (dashboard-setup-startup-hook)                                    
 (setq dashboard-items '((recents  . 10)
@@ -213,12 +230,6 @@
     (setq cua-auto-tabify-rectangles nil) 
     (transient-mark-mode 1)               
     (setq cua-keep-region-after-copy t)                            
-
-(eval-after-load 'flycheck '(flycheck-clojure-setup))              
-(add-hook 'after-init-hook #'global-flycheck-mode)
-
-(eval-after-load 'flycheck
-  '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
   
 (centaur-tabs-mode t)                
    (setq centaur-tabs-modified-marker "O")                         
@@ -297,11 +308,11 @@
 (global-set-key [f6]  'delete-window)
 (global-set-key [f7]  'split-window-below)
 (global-set-key [f8]  'split-window-right)
-(global-set-key [f9]  'e-full-screen)
+(global-set-key [f9] 'e-full-screen)
 
-(global-set-key [f10] 'e-flip-comment-line-or-region)
+(global-set-key [f10]  'e-flip-comment-line-or-region)
 (global-set-key [f11] 'cider-format-buffer)
-(global-set-key [f12] 'ag)                    
+(global-set-key [f12]  'ag)                    
 
                                         
   (key-chord-mode 1)
@@ -311,7 +322,7 @@
   (key-chord-define-global "--"   'zoom-frm-out)
   (key-chord-define-global "=="   'zoom-frm-in)
 
-  (key-chord-define-global "^^"   'e-change-dired-sidebar)          
+  (key-chord-define-global "^^"   'e-change-dired-sidebar)          ;
 
   (key-chord-define-global "\\\\" 'e-kill-search-buffs )   
   (key-chord-define-global "''"   'e-kill-non-core-cljs )   
@@ -466,8 +477,4 @@
 (setq default-directory "D:/_clojure/stat/src" )
 
 
-
-    
-
-
-   
+  
