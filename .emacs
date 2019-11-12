@@ -41,10 +41,6 @@
     ;; extra syntax highlighting for clojure
     clojure-mode-extra-font-locking
 
-    ;; integration with a Clojure REPL
-    ;; https://github.com/clojure-emacs/cider
-   ; cider
-
     ;; allow ido usage in as many contexts as possible. see
     ;; customizations/navigation.el line 23 for a description
     ;; of ido
@@ -57,9 +53,6 @@
 
     ;; project navigation
     projectile
-
-    ;; colorful parenthesis matching
-    rainbow-delimiters
 
     ;; edit html tags like sexps
     tagedit
@@ -139,24 +132,19 @@
  '(coffee-tab-width 2)
  '(package-selected-packages
    (quote
-    (cider magit tagedit rainbow-delimiters projectile smex ido-completing-read+ clojure-mode-extra-font-locking clojure-mode paredit ))))
+    (magit tagedit projectile smex ido-completing-read+ clojure-mode-extra-font-locking clojure-mode paredit ))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+  
  )
  
  
  
- 
- 
- 
- 
- 
- 
- 
+
  
  
  
@@ -198,6 +186,31 @@
 (require 'highlight-symbol)
 (require 'zoom-frm)
 (require 'sesman)
+
+(defun my-parens-colors ()              ; https://yoo2080.wordpress.com/2013/09/08/living-with-rainbow-delimiters-mode/
+  (require 'rainbow-delimiters)
+  (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
+  
+  (defface my-outermost-paren-face '((t (:weight bold))) "Face used for outermost parens.")
+  (set-face-attribute 'rainbow-delimiters-depth-1-face nil
+                    :foreground 'unspecified
+                    :inherit 'my-outermost-paren-face)
+  (set-face-attribute 'rainbow-delimiters-depth-2-face nil
+                    :foreground 'unspecified
+                    :inherit 'my-outermost-paren-face)
+  
+  (defvar my-paren-dual-colors '("hot pink" "dodger blue"))
+  (setq rainbow-delimiters-outermost-only-face-count 0)
+  (setq rainbow-delimiters-max-face-count 2)
+  (set-face-foreground 'rainbow-delimiters-depth-1-face (elt my-paren-dual-colors 1))
+  (set-face-foreground 'rainbow-delimiters-depth-2-face (elt my-paren-dual-colors 0))
+
+  (require 'paren) ; show-paren-mismatch is defined in paren.el
+  (set-face-attribute 'rainbow-delimiters-unmatched-face nil
+                      :foreground 'unspecified
+                      :inherit 'show-paren-mismatch))
    
 (defun my-focus (active-background)
  (require 'hiwin)
@@ -263,8 +276,7 @@
       (ibuffer-switch-to-saved-filter-groups "default")))
       (add-to-list 'ibuffer-never-show-predicates "^\\:")          ;; hide ":d:/..."
       (add-to-list 'ibuffer-never-show-predicates "*dashboard*")   
-      (add-to-list 'ibuffer-never-show-predicates "*nrepl")  
-  )
+      (add-to-list 'ibuffer-never-show-predicates "*nrepl"))
 
 (defun my-autosave (wait-seconds)
   (run-with-idle-timer wait-seconds t (lambda () (save-some-buffers t))))
@@ -308,6 +320,8 @@
   (key-chord-define-global "``"   'highlight-symbol)
   (key-chord-define-global "[["   'paredit-mode) 
   (key-chord-define-global "]]"   'mark-whole-buffer)   
+  (key-chord-define-global "qq"   'cider-repl-clear-buffer)
+  (key-chord-define-global "QQ"   'cider-repl-clear-buffer)
   (key-chord-define-global "ZZ"   'my-sidebar-toggle)              
   (key-chord-define-global "zz"   'my-sidebar-toggle))
  
@@ -380,9 +394,9 @@
   (save-buffer)
   (cider-ns-reload-all)
   (cider-ns-refresh)
-  (kmb-kill-matching-buffers-no-ask "\*cider-error\*") 
-  (kmb-kill-matching-buffers-no-ask "\*nrepl-server\*") 
-  (kmb-kill-matching-buffers-no-ask "\*cider-ns-refresh-log\*"))    
+  (kmb-kill-matching-buffers-no-ask "\*cider-error\*")
+  ; (kmb-kill-matching-buffers-no-ask "\*cider-ns-refresh-log\*")  ; file is locked now?
+  (kmb-kill-matching-buffers-no-ask "\*nrepl-server\*"))    
   
 (defun my-full-screen()           
   (interactive)
@@ -490,7 +504,7 @@
 (defun my-start (start-dir)
   (switch-to-buffer "*Messages*")
   (kill-buffer "*scratch*")
-  (cd start-dir))
+  (cd start-dir)) 
 
 (my-ibuffer)
 (my-tabs)
@@ -506,7 +520,7 @@
 (my-sidebar)
 (my-buffermenu)
 (my-particulars) 
-(my-start "C:/_progs_/status/")
+(my-parens-colors)
 
 ; F1:eval SEXP             F6:del-win            F10:COMMENT-code     
 ;   F2:eval BUFFER           F7:ver-split           F11:FORMAT-code
@@ -519,15 +533,15 @@
 ;  C-w:cut  M-w:copy  C-y:Paste  
 ;
 ; highlight-and-count-text:~~             zoom-out:--   zoom-in:==
-;                  para-mode:[[   select-all:]]   \\:kill-searches                
-; sidebar-toggle:ZZ             kill-line:KK  kill-non-core.cljs:''
+; clear-repl:qq          para-mode:[[   select-all:]]   \\:kill-searches                
+; sidebar-toggle:ZZ         kill-line:KK      kill-non-core.cljs:''
  
 
+(my-start "C:/_progs_/status/")
+;(my-start "C:/_progs_/clojure-text-diff/src")
  
  
  
-
-
 
  
  
