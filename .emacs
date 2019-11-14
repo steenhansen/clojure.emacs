@@ -291,37 +291,43 @@
   (setq cider-repl-require-ns-on-set t)
   (setq cider-auto-select-error-buffer nil))
  
-(defun my-funckeys () 
+(defun my-cider-funckeys ()
   (global-set-key [f1]  'my-cider-eval-sexp)         
   (global-set-key [f2]  'my-cider-load-buffer)       
   (global-set-key [f3]  'cider-repl-set-ns)        
   (global-set-key [f4]  'my-cider-reaload-all)
   (global-set-key [f5]  'cider-jack-in)
-
+  (global-set-key [f11] 'cider-format-buffer)) 
+ 
+(defun my-funckeys (lang-type) 
+  (if (string-equal lang-type "clj")
+    (my-cider-funckeys))
   (global-set-key [f6]  'delete-window)
   (global-set-key [f7]  'split-window-below)
   (global-set-key [f8]  'split-window-right)
   (global-set-key [f9]  'my-full-screen)
-
   (global-set-key [f10] 'my-flip-comment-line-or-region)
-  (global-set-key [f11] 'cider-format-buffer)
   (global-set-key [f12] 'ag))
  
-(defun my-chords ()
+(defun my-cider-chords ()
+  (key-chord-define-global "''"   'my-kill-non-core-cljs )   
+  (key-chord-define-global "[["   'paredit-mode) 
+  (key-chord-define-global "qq"   'cider-repl-clear-buffer)
+  (key-chord-define-global "QQ"   'cider-repl-clear-buffer))
+ 
+(defun my-chords (lang-type)
   (require 'key-chord)
   (key-chord-mode 1)
+  (if (string-equal lang-type "clj")
+	(my-cider-chords))
   (key-chord-define-global "KK"   'kill-whole-line)
   (key-chord-define-global "kk"   'kill-whole-line)
   (key-chord-define-global "--"   'zoom-frm-out)
   (key-chord-define-global "=="   'zoom-frm-in)
   (key-chord-define-global "^^"   'my-change-dired-sidebar)
   (key-chord-define-global "\\\\" 'my-kill-search-buffs )   
-  (key-chord-define-global "''"   'my-kill-non-core-cljs )   
   (key-chord-define-global "``"   'highlight-symbol)
-  (key-chord-define-global "[["   'paredit-mode) 
   (key-chord-define-global "]]"   'mark-whole-buffer)   
-  (key-chord-define-global "qq"   'cider-repl-clear-buffer)
-  (key-chord-define-global "QQ"   'cider-repl-clear-buffer)
   (key-chord-define-global "ZZ"   'my-sidebar-toggle)              
   (key-chord-define-global "zz"   'my-sidebar-toggle))
  
@@ -501,10 +507,26 @@
 
   (setq mouse-buffer-menu-mode-mult 1234))  ;; deter sub-menus on control-click 
 
-(defun my-start (start-dir)
+(defun my-buffers (start-dir)
   (switch-to-buffer "*Messages*")
   (kill-buffer "*scratch*")
   (cd start-dir)) 
+
+(defun my-load-first (my-start-dir my-start-file)
+  (my-buffers my-start-dir)   
+  (setq initial-buffer-choice (concat my-start-dir my-start-file))
+  (setq split-lang (split-string my-start-file "\\."))
+  (car (last split-lang)))
+
+(defun my-go-emacs (my-start-dir my-start-file)
+  (lexical-let ((my-start-mess (concat my-start-dir my-start-file)))
+   (defun display-startup-echo-area-message ()
+    (message my-start-mess)))
+  (setq lang-extension (my-load-first my-start-dir my-start-file) )
+  (my-funckeys lang-extension)
+  (my-chords lang-extension)
+  (my-sidebar-toggle)
+  (my-particulars) )
 
 (my-ibuffer)
 (my-tabs)
@@ -514,12 +536,9 @@
 (my-autosave 2)
 (my-mousewheel)
 (my-cider)
-(my-funckeys)
-(my-chords)
 (my-modeline)
 (my-sidebar)
 (my-buffermenu)
-(my-particulars) 
 (my-parens-colors)
 
 ; F1:eval SEXP             F6:del-win            F10:COMMENT-code     
@@ -536,14 +555,10 @@
 ; clear-repl:qq          para-mode:[[   select-all:]]   \\:kill-searches                
 ; sidebar-toggle:ZZ         kill-line:KK      kill-non-core.cljs:''
  
+        (my-go-emacs "C:/_progs_/status"    "/src/core.clj") 
 
-(my-start "C:/_progs_/status/")
-;(my-start "C:/_progs_/clojure-text-diff/src")
- 
- 
- 
+       ;(my-go-emacs "C:/_progs_/clojure-text-diff"    "/src/text_diff.clj") 
 
- 
- 
+
  
  
