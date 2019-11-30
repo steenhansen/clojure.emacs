@@ -1,4 +1,4 @@
-  
+
 ;;;;
 ;; Packages
 ;;;;
@@ -134,30 +134,13 @@
    (quote
     (magit tagedit projectile smex ido-completing-read+ clojure-mode-extra-font-locking clojure-mode paredit ))))
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-  
- )
- 
+
+ (custom-set-faces
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "outline" :slant normal :weight normal :height 143 :width normal))))
+ '(show-paren-match ((t (:foreground "white" :background "snow4")))))
  
  
 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
  
 (defun my-particulars ()
   (setq split-list (split-string (emacs-version) "("))
@@ -186,6 +169,10 @@
 (require 'highlight-symbol)
 (require 'zoom-frm)
 (require 'sesman)
+
+(defun my-white-spaces ()
+  (setq mode-require-final-newline nil)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace))
 
 (defun my-parens-colors ()              ; https://yoo2080.wordpress.com/2013/09/08/living-with-rainbow-delimiters-mode/
   (require 'rainbow-delimiters)
@@ -275,8 +262,9 @@
       (ibuffer-auto-mode 1)
       (ibuffer-switch-to-saved-filter-groups "default")))
       (add-to-list 'ibuffer-never-show-predicates "^\\:")          ;; hide ":d:/..."
-      (add-to-list 'ibuffer-never-show-predicates "*dashboard*")   
-      (add-to-list 'ibuffer-never-show-predicates "*nrepl"))
+	  (add-to-list 'ibuffer-never-show-predicates "*dashboard*")   
+	  (add-to-list 'ibuffer-never-show-predicates "*cider-ns-refresh-log*")    
+	  (add-to-list 'ibuffer-never-show-predicates "*nrepl"))
 
 (defun my-autosave (wait-seconds)
   (run-with-idle-timer wait-seconds t (lambda () (save-some-buffers t))))
@@ -287,6 +275,7 @@
   (setq scroll-step 1))
  
 (defun my-cider ()
+  (setq cider-repl-display-help-banner nil) 
   (setq cider-ns-save-files-on-refresh t)
   (setq cider-repl-require-ns-on-set t)
   (setq cider-auto-select-error-buffer nil))
@@ -343,6 +332,8 @@
              mode-line-mule-info
            " "
              mode-line-modified
+		   " "
+		     mode-line-position
            " "    
               buffer-file-name))))
 
@@ -401,7 +392,6 @@
   (cider-ns-reload-all)
   (cider-ns-refresh)
   (kmb-kill-matching-buffers-no-ask "\*cider-error\*")
-  ; (kmb-kill-matching-buffers-no-ask "\*cider-ns-refresh-log\*")  ; file is locked now?
   (kmb-kill-matching-buffers-no-ask "\*nrepl-server\*"))    
   
 (defun my-full-screen()           
@@ -428,11 +418,11 @@
       (my-menu-read-modifed a-buff)
       (if (string-prefix-p "test" (buffer-name a-buff) ) 
         "      " 
-        "")                                  ;                  test_file.clj
+        "")                                             ;   test_file.clj
       (buffer-name a-buff)
       (if (string-prefix-p "core" (buffer-name a-buff) )
         " ***" 
-        "")))                                     ; core.clj ***
+        "")))                                         ;core.clj ***
 
   (defun my-menu-no-case-sort (buff-1 buff-2)
     "ensure mouse-buffer-menu is sorted with no-case"
@@ -475,6 +465,7 @@
     "ignore emacs buffers on mouse-buffer-menu"
     (if (or (equal name-of-buffer "*dashboard*" )
             (equal name-of-buffer "*scratch*")
+            (equal name-of-buffer "*cider-ns-refresh-log*")
             (string-prefix-p "*nrepl-server" name-of-buffer)  
             (string-prefix-p ":" name-of-buffer  )
             (equal name-of-buffer "*:Buffers:*")
@@ -518,15 +509,20 @@
   (setq split-lang (split-string my-start-file "\\."))
   (car (last split-lang)))
 
-(defun my-go-emacs (my-start-dir my-start-file)
-  (lexical-let ((my-start-mess (concat my-start-dir my-start-file)))
+(defun my-rewrite-keys ()
+ (global-set-key (kbd "C-z") 'undo)
+ (global-set-key (kbd "C-s") 'save-buffer))
+ 
+(defun my-go-emacs (my-start-dir my-start-file my-start-command)
+  (lexical-let ((my-start-mess (concat "Starting in " my-start-dir my-start-file)))
    (defun display-startup-echo-area-message ()
     (message my-start-mess)))
   (setq lang-extension (my-load-first my-start-dir my-start-file) )
   (my-funckeys lang-extension)
   (my-chords lang-extension)
   (my-sidebar-toggle)
-  (my-particulars) )
+  (my-particulars)
+  (command-execute (intern my-start-command)))
 
 (my-ibuffer)
 (my-tabs)
@@ -540,6 +536,8 @@
 (my-sidebar)
 (my-buffermenu)
 (my-parens-colors)
+(my-white-spaces)
+(my-rewrite-keys)
 
 ; F1:eval SEXP             F6:del-win            F10:COMMENT-code     
 ;   F2:eval BUFFER           F7:ver-split           F11:FORMAT-code
@@ -555,9 +553,14 @@
 ; clear-repl:qq          para-mode:[[   select-all:]]   \\:kill-searches                
 ; sidebar-toggle:ZZ         kill-line:KK      kill-non-core.cljs:''
  
-        (my-go-emacs "C:/_progs_/status"    "/src/core.clj") 
+;(my-go-emacs "C:/_progs_/status" "/src/core.clj" "cider-jack-in") 
 
-       ;(my-go-emacs "C:/_progs_/clojure-text-diff"    "/src/text_diff.clj") 
+(my-go-emacs "C:/_progs_/clojure-text-diff" "/src/text_diff.clj" "cider-jack-in") 
+
+
+
+
+
 
 
  
