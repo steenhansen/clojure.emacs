@@ -287,10 +287,14 @@
   (global-set-key [f4]  'my-cider-reaload-all)
   (global-set-key [f5]  'cider-jack-in)
   (global-set-key [f11] 'cider-format-buffer)) 
+
+(defun my-js-funckeys ()) 
  
 (defun my-funckeys (lang-type) 
   (if (string-equal lang-type "clj")
-    (my-cider-funckeys))
+    (my-cider-funckeys)
+	(if (string-equal lang-type "js")
+      (my-js-funckeys)))
   (global-set-key [f6]  'delete-window)
   (global-set-key [f7]  'split-window-below)
   (global-set-key [f8]  'split-window-right)
@@ -317,8 +321,7 @@
   (key-chord-define-global "\\\\" 'my-kill-search-buffs )   
   (key-chord-define-global "``"   'highlight-symbol)
   (key-chord-define-global "]]"   'mark-whole-buffer)   
-  (key-chord-define-global "ZZ"   'my-sidebar-toggle)              
-  (key-chord-define-global "zz"   'my-sidebar-toggle))
+  (key-chord-define-global ",,"   'my-sidebar-toggle))
  
 (defun my-modeline ()
   (setq-default mode-line-format
@@ -511,6 +514,7 @@
 
 (defun my-rewrite-keys ()
  (global-set-key (kbd "C-z") 'undo)
+ (global-set-key (kbd "C-v") 'ignore)       ; turn off page down
  (global-set-key (kbd "C-s") 'save-buffer))
  
 (defun my-go-emacs (my-start-dir my-start-file my-start-command)
@@ -537,7 +541,7 @@
 (my-buffermenu)
 (my-parens-colors)
 (my-white-spaces)
-(my-rewrite-keys)
+(my-rewrite-keys) 
 
 ; F1:eval SEXP             F6:del-win            F10:COMMENT-code     
 ;   F2:eval BUFFER           F7:ver-split           F11:FORMAT-code
@@ -547,11 +551,12 @@
 ;
 ;  C-<SPC>:start mark  MOUSE-3:end region  C-x C-f:create file
 ;
-;  C-w:cut  M-w:copy  C-y:Paste  
+;  C-w:cut  M-w:copy  C-y:Paste                control-q <tab>
 ;
 ; highlight-and-count-text:~~             zoom-out:--   zoom-in:==
 ; clear-repl:qq          para-mode:[[   select-all:]]   \\:kill-searches                
-; sidebar-toggle:ZZ         kill-line:KK      kill-non-core.cljs:''
+;                   kill-line:KK      kill-non-core.cljs:''
+;                                       sidebar-toggle:,,  
  
 ;(my-go-emacs "C:/_progs_/status" "/src/core.clj" "cider-jack-in") 
 
@@ -559,9 +564,6 @@
 
 
 
-
-
-
-
+ 
  
  
