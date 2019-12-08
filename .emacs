@@ -169,6 +169,7 @@
 (require 'highlight-symbol)
 (require 'zoom-frm)
 (require 'sesman)
+(require 'bm)
 
 (defun my-white-spaces ()
   (setq mode-require-final-newline nil)
@@ -321,7 +322,10 @@
   (key-chord-define-global "\\\\" 'my-kill-search-buffs )   
   (key-chord-define-global "``"   'highlight-symbol)
   (key-chord-define-global "]]"   'mark-whole-buffer)   
-  (key-chord-define-global ",,"   'my-sidebar-toggle))
+  (key-chord-define-global ",,"   'my-sidebar-toggle)
+  (key-chord-define-global ".."   'bm-toggle)
+  (key-chord-define-global "<<"   'bm-previous)
+  (key-chord-define-global ">>"   'bm-next))
  
 (defun my-modeline ()
   (setq-default mode-line-format
@@ -556,14 +560,11 @@
 ; highlight-and-count-text:~~             zoom-out:--   zoom-in:==
 ; clear-repl:qq          para-mode:[[   select-all:]]   \\:kill-searches                
 ;                   kill-line:KK      kill-non-core.cljs:''
-;                                       sidebar-toggle:,,  
+;                                previous-bookmark:<<  next-bookmark:>>
+;                                   sidebar-toggle:,,  bookmark-toggle:..
+  
  
 ;(my-go-emacs "C:/_progs_/status" "/src/core.clj" "cider-jack-in") 
 
 (my-go-emacs "C:/_progs_/clojure-text-diff" "/src/text_diff.clj" "cider-jack-in") 
-
-
-
- 
- 
  
