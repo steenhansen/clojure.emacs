@@ -464,9 +464,7 @@
     "format mouse-buffer entry as an ag-search"
       (setq split-list (split-string name-of-buffer "text:\\| dir:"))
       (setq search-for (nth 1 split-list))
-      (format "%1$s%2$s" 
-        "~~~search : " 
-        search-for))
+      (format "%1$s%2$s%3$s" "~~~search : ~" search-for "~"))
       
   (defun my-menu-buff-show (name-of-buffer)
     "ignore emacs buffers on mouse-buffer-menu"
@@ -517,7 +515,8 @@
   (car (last split-lang)))
 
 (defun my-rewrite-keys ()
- (global-set-key (kbd "C-z") 'undo)
+ (global-set-key (kbd "C-z") 'undo)        
+ (global-set-key (kbd "C-w") 'yank)         ; paste
  (global-set-key (kbd "C-v") 'ignore)       ; turn off page down
  (global-set-key (kbd "C-s") 'save-buffer))
  
@@ -564,7 +563,6 @@
 ;                                   sidebar-toggle:,,  bookmark-toggle:..
   
  
-;(my-go-emacs "C:/_progs_/status" "/src/core.clj" "cider-jack-in") 
-
-(my-go-emacs "C:/_progs_/clojure-text-diff" "/src/text_diff.clj" "cider-jack-in") 
+(my-go-emacs "C:/_progs_/crash-sms" "/src/core.clj" "cider-jack-in") 
+;(my-go-emacs "C:/_progs_/clojure-text-diff" "/src/text_diff.clj" "cider-jack-in") 
  
