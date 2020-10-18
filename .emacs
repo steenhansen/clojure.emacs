@@ -1,4 +1,32 @@
 
+
+;;;;
+;; Windows install
+;;
+;;    1 set environment variable 
+;;         HOME = c:\
+;;
+;;    2 ;; Place the below elisp in C:\Users\16043\AppData\Roaming\.emacs
+;;        (setq user-init-file "C:/.emacs")
+;;        (setq user-emacs-directory "C:/.emacs.d/")
+;;        (setq default-directory "C:\Users\16043\Documents\GitHub/crash-sms")
+;;        (setenv "HOME" "C:\Users\16043\Documents")
+;;        (load user-init-file)
+;;
+;;    3 Put this actual current file in C:/.emacs
+;;
+;;    4 Copy customizations and elpa folders into C:/.emacs.d/  
+;;
+;;    5 To debug emacs init, change shortcut's Properties Target to
+;;      "C:\Program Files\Emacs\x86_64\bin\runemacs.exe" --debug-init
+;;
+;;;;
+
+
+
+
+
+
 ;;;;
 ;; Packages
 ;;;;
